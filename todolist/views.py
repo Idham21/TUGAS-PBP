@@ -5,20 +5,57 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+from django.core import serializers
 import datetime
 from todolist.forms import TaskForm
-
+from django.contrib.auth.models import User
 from todolist.models import Task
 
 # Create your views here.
 @login_required(login_url='/todolist/login/')
 def home_page(request) :
     task = Task.objects.all()
+    form = TaskForm()
+    if request.method == "POST" :
+        user = request.POST['user']
+        title = request.POST['title']
+        date = request.POST['date']
+        description = request.POST['description']
+
+        user = User.objects.get(pk = user)
+        Task.objects.create(
+            user = user,
+            title = title,
+            date = date,
+            description = description
+        )       
     context = {
-        "task" : task
+        "task" : task,
+        "form"  : form
     }
     return render(request, "home_page.html", context)
+
+def home_page_json(request) :
+    data = Task.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+def create_task_ajax(request) :
+    if request.method == "POST" :
+        user = request.POST['user']
+        title = request.POST['title']
+        date = request.POST['date']
+        description = request.POST['description']
+
+        user = User.objects.get(pk = user)
+        Task.objects.create(
+            user = user,
+            title = title,
+            date = date,
+            description = description
+        )
+    return render(request, "create_task.html")
+
 
 @login_required(login_url='/todolist/login/')
 def create_task(request) :

@@ -9,8 +9,7 @@ urlpatterns = [
     path('login/', login_user, name='login_user'),
     path('logout/', logout_user, name='logout_user'),
     path('create-task/', create_task, name='create_task'),
-    path('register/', register, name='register')
-
-
-
+    path('register/', register, name='register'),
+    path('json/', home_page_json, name='home_page_json'),
+    path('add/', create_task_ajax, name='add_task')
 ]

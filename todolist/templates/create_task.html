@@ -2,13 +2,13 @@
 
 
 {% block content %}  
-<title>Registrasi Akun</title>
+<title>Create Task</title>
 
 <div class = "login">
     
     <h1>Formulir Create Task</h1>  
 
-    <form method="POST" >  
+    <form method="POST" id="task-form">  
         {% csrf_token %}  
         <div class="mb-3">
             {{form.as_table}}
@@ -17,5 +17,9 @@
     </form>
 
 </div>  
+
+<script>
+
+</script>
 
 {% endblock content %}

@@ -10,30 +10,71 @@
   <h5>Student ID: </h5>
   <p>2106752174</p>
   <button><a href="{% url 'todolist:create_task' %}">Create Task</a></button>
-  {%for i in task%}
-
-  <div class="card">
-    <div class="card-header">
-      {{i.user}}
-    </div>
-    <div class="card-body">
-      <h5 class="card-title">{{i.title}}</h5>
-      <p class="card-text">{{i.description}}</p>
-      <p class="card-text">{{i.date}}</p>
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Add Task
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <form method="POST" id="add-task-form">  
+            {% csrf_token %}  
+            <div class="mb-3">
+                {{form.as_table}}
+            </div>
+        </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="add_task()">Submit</button>
+        </div>
+      </div>
     </div>
   </div>
-  {%endfor%}
-  <button> <a href="{% url 'todolist:login_user' %}">Logout</a></button> 
-  <!-- <table>
-    {%for i in task%}
-    <tr>
-      <th>{{i.user}}</th>
-      <th>{{i.title}}</th>
-      <th>{{i.date}}</th>
-      <th>{{i.description}}</th>
-    </tr>
-    {%endfor%}
-    {% comment %} Add the data below this line {% endcomment %}
-  </table> -->
+
+  <div class="card" id="card-task">
+
+  </div>
+  <button> <a href="{% url 'todolist:login_user' %}">Logout</a></button>
+  <script>
+    window.onload = show_task();
+    async function getTodoList(){
+        var a = await fetch("{% url 'todolist:home_page_json' %}").then((res) => res.json())
+        return a
+    }
+    async function show_task(){
+        document.getElementById("card-task").innerHTML = "";
+        html = "";
+        task = await getTodoList();
+        task.forEach((item)=>{
+            html += `
+            <div class="card-header">
+                ${item.fields.user}
+            </div>
+            <div class="card-body">
+            <h5 class="card-title">${item.fields.title}</h5>
+            <p class="card-text">${item.fields.description}</p>
+            <p class="card-text">${item.fields.date}</p>
+            </div>
+            `
+        })
+        document.getElementById("card-task").innerHTML = html
+    }
+
+    function add_task() {
+        fetch("{% url 'todolist:add_task' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector("#add-task-form"))
+        }).then(show_task)
+        return false
+    }
+
+  </script>
 
  {% endblock content %}
