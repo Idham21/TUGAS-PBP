@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+ {% block content %}
+
+  <h1>Tugas 4 Assignment PBP/PBD</h1>
+
+  <h5>Name: </h5>
+  <p>Idham Vadri</p>
+
+  <h5>Student ID: </h5>
+  <p>2106752174</p>
+  <button><a href="{% url 'todolist:create_task' %}">Create Task</a></button>
+
+  <table>
+    {%for i in task%}
+    <tr>
+      <th>{{i.user}}</th>
+      <th>{{i.title}}</th>
+      <th>{{i.date}}</th>
+      <th>{{i.description}}</th>
+    </tr>
+    {%endfor%}
+    {% comment %} Add the data below this line {% endcomment %}
+  </table>
+
+ {% endblock content %}
