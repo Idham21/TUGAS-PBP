@@ -10,8 +10,21 @@
   <h5>Student ID: </h5>
   <p>2106752174</p>
   <button><a href="{% url 'todolist:create_task' %}">Create Task</a></button>
+  {%for i in task%}
 
-  <table>
+  <div class="card">
+    <div class="card-header">
+      {{i.user}}
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{i.title}}</h5>
+      <p class="card-text">{{i.description}}</p>
+      <p class="card-text">{{i.date}}</p>
+    </div>
+  </div>
+  {%endfor%}
+  <button> <a href="{% url 'todolist:login_user' %}">Logout</a></button> 
+  <!-- <table>
     {%for i in task%}
     <tr>
       <th>{{i.user}}</th>
@@ -21,6 +34,6 @@
     </tr>
     {%endfor%}
     {% comment %} Add the data below this line {% endcomment %}
-  </table>
+  </table> -->
 
  {% endblock content %}
